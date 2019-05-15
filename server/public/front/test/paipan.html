@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<title>八字排盘-八字在线排盘-八字在线起卦-四柱在线排盘-四柱在线起卦-盼运溪在线排盘系统</title>
+	<meta name="keywords" content="八字排盘,八字在线排盘,在线八字排盘,八字在线起卦,纳甲八字起局-子平在线算命-盼运溪在线排盘系统">
+	<meta name="description" content="盼运溪在线排盘系统,八字排盘,八字在线排盘,在线八字排盘,八字在线起卦,纳甲八字起局,子平在线算命。">
+	<style type="text/css">
+		.box{
+			box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+			border-radius: 4px;
+			padding: 2%;
+		}
+		.item{
+			padding: 2%;
+		}
+	</style>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
+</head>
+<body>
+	<el-container>
+	<el-header>盼运网八字排盘系统V0.1内部测试版本</el-header>
+	<el-main>
+		<div id="app0" class="box">
+			<el-row>
+			  <el-col :span="24">
+			  	<el-card class="box-card">
+				  	<el-date-picker
+					       v-model="bornTime"
+					       type="datetime"
+					       placeholder="选择公历出生时间"
+					       >
+					</el-date-picker>
+					
+					<el-radio  v-model="sex" label="0">男</el-radio>
+		  			<el-radio  v-model="sex" label="1">女</el-radio>
+		  			<el-button type="primary" v-on:click="submit">提交</el-button>
+		  		</el-card>
+			  </el-col>
+			</el-row>
+			<el-row v-if="rs">
+				<el-col :span="24">
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+					    <span>命盘信息(备注:才为正财,财为偏财)</span>
+					  </div>
+					  <el-table :data="tableData" border style="width: 100%">
+					    <el-table-column prop="t" label="#" ></el-table-column>
+					    <el-table-column prop="y" label="年" ></el-table-column>
+					    <el-table-column prop="m" label="月" ></el-table-column>
+					    <el-table-column prop="d" label="日" ></el-table-column>
+					    <el-table-column prop="h" label="时" ></el-table-column>
+					  </el-table>
+					</el-card>
+					
+				</el-col>
+			</el-row>
+			<el-row v-if="rs">
+				<el-col :span="24">
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+					    <span>起运:{{rs.pan.start_desc}}</span>
+					  </div>
+					  <span>大运</span>
+					</el-card>
+					<el-table :data="big" border style="width: 100%">
+						<el-table-column prop="t" label="年份"></el-table-column>
+						<el-table-column v-for='value,index in rs.pan.big_start_time' :prop="'t'+index" :label="value[0]" ></el-table-column>
+					</el-table>
+				</el-col>
+			</el-row>
+		</div>
+	</el-main>
+	</el-container>
+</body>
+<!-- 引入组件库 -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+	var app0 = new Vue({
+	  el: '#app0',
+	  data: {
+	    seen: true,
+	    bornTime:'1989-02-04 02:40',
+	    sex:'0',
+	    rs:false,
+	    tableData:[],
+	    big:[]
+	  },
+	  methods:{
+	  	submit:function(){
+	  		var that = this;
+	  		axios.get('/index/bazi/api/time/'+this.bornTime+'/sex/'+this.sex)
+				.then(function (rs) {
+					console.log(rs);
+					var rs = rs.data;
+					var pan = rs.pan;
+					var cg_god = [];
+					var kongWang = [];
+					for(var i=0;i<4;i++){
+						cg_god[i]=[];
+						for(var j in pan.dz_cg_god[i]){
+							console.log(j);
+							cg_god[i].push(pan.dz_cg_god[i][j].char);
+						}
+						if(pan.xw.index.indexOf(pan.dz[i])!= -1){
+							kongWang[i] = '是';
+						}else{
+							kongWang[i] = '否';
+						}
+					}
+					that.tableData =[
+						
+						{'t':'天干','y':pan.bazi[0][0],'m':pan.bazi[1][0],'d':pan.bazi[2][0],'h':pan.bazi[3][0]},
+						{'t':'地支','y':pan.bazi[0][1],'m':pan.bazi[1][1],'d':pan.bazi[2][1],'h':pan.bazi[3][1]},
+						
+						{'t':'藏干','y':pan.dz_cg[0]['char'].join(','),'m':pan.dz_cg[1]['char'].join(','),'d':pan.dz_cg[2]['char'].join(','),'h':pan.dz_cg[3]['char'].join(',')},
+						{'t':'天干神煞','y':pan.tg_cg_god[0]['char'],'m':pan.tg_cg_god[1]['char'],'d':pan.tg_cg_god[2]['char'],'h':pan.tg_cg_god[3]['char']},
+						{'t':'藏干神煞','y':cg_god[0].join(','),'m':cg_god[1].join(','),'d':cg_god[2].join(','),'h':cg_god[3].join(',')},
+						{'t':'气','y':pan.self_qi[0]['char'],'m':pan.self_qi[1]['char'],'d':pan.self_qi[2]['char'],'h':pan.self_qi[3]['char']},
+						{'t':'是否空亡','y':kongWang[0],'m':kongWang[1],'d':kongWang[2],'h':kongWang[3]},
+
+						{'t':'日干游走','y':pan.day_cs[0].char,'m':pan.day_cs[1].char,'d':pan.day_cs[2].char,'h':pan.day_cs[3].char},
+						{'t':'年干游走','y':pan.year_cs[0].char,'m':pan.year_cs[1].char,'d':pan.year_cs[2].char,'h':pan.year_cs[3].char},
+						{'t':'月干游走','y':pan.month_cs[0].char,'m':pan.month_cs[1].char,'d':pan.month_cs[2].char,'h':pan.month_cs[3].char},
+						{'t':'时干游走','y':pan.hour_cs[0].char,'m':pan.hour_cs[1].char,'d':pan.hour_cs[2].char,'h':pan.hour_cs[3].char},
+					];
+					//that.$set(that.tableData,'tableData',tableData);
+					var big={'t':'干支'};
+					for(let i in pan.big){
+						big['t'+i]=pan.big[i];
+					}
+					that.big.push(big);
+					var tmp={'t':'神煞'}
+					for(let i in pan.big_god){
+						tmp['t'+i]=pan.big_god[i].char;
+					}
+					that.big.push(tmp);
+					tmp={'t':'长生'};
+					for(let i in pan.big_cs){
+						tmp['t'+i]=pan.big_cs[i].char;
+					}
+					that.big.push(tmp);
+					that.rs = rs;
+					console.log(tableData)
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+	  	}
+	  }
+
+	});
+</script>
+</html>
