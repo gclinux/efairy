@@ -93,6 +93,7 @@
 	  methods:{
 	  	submit:function(){
 	  		var that = this;
+	  		that.big=[];
 	  		axios.get('/index/bazi/api/time/'+this.bornTime+'/sex/'+this.sex)
 				.then(function (rs) {
 					console.log(rs);
