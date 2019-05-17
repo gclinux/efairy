@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<title>八字算命-八字在线排盘-八字在线起卦-四柱在线排盘-四柱在线起卦-盼运溪在线排盘系统</title>
+	<meta name="keywords" content="八字排盘,八字在线排盘,在线八字排盘,八字在线起卦,纳甲八字起局-子平在线算命-盼运溪在线排盘系统">
+	<meta name="description" content="盼运溪在线排盘系统,八字排盘,八字在线排盘,在线八字排盘,八字在线起卦,纳甲八字起局,子平在线算命。">
+	<style type="text/css">
+		.box{
+			box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+			border-radius: 4px;
+			padding: 2%;
+		}
+		.item{
+			padding: 2%;
+		}
+	</style>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
+</head>
+<body>
+	<el-container>
+	<el-header>盼运网八字排盘系统V0.1内部测试版本</el-header>
+	<el-main>
+		<div id="app0" class="box">
+			<el-row>
+			  <el-col :span="24">
+			  	<el-card class="box-card">
+				  	<el-date-picker
+					       v-model="bornTime"
+								 type="datetime"
+								 value-format="yyyy-MM-dd HH:mm:ss"
+					       placeholder="选择公历出生时间"
+					       >
+					</el-date-picker>
+					
+					<el-radio  v-model="sex" label="0">男</el-radio>
+		  			<el-radio  v-model="sex" label="1">女</el-radio>
+		  			<el-button type="primary" v-on:click="submit">提交</el-button>
+		  		</el-card>
+			  </el-col>
+			</el-row>
+			<el-row v-if="rs">
+				<el-col :span="24">
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+					    <span>结果:</span>
+					  </div>
+					  <div v-for="o in rs" class="text item">
+					    {{o}}
+					  </div>
+					</el-card>
+					
+				</el-col>
+			</el-row>
+		</div>
+	</el-main>
+	</el-container>
+</body>
+<!-- 引入组件库 -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+	var app0 = new Vue({
+	  el: '#app0',
+	  data: {
+	    seen: true,
+	    bornTime:'1989-02-04 02:40',
+	    sex:'0',
+	    rs:false,
+	    
+	  },
+	  methods:{
+	  	submit:function(){
+	  		var that = this;
+	  		axios.get('/index/bazi/api2/time/'+this.bornTime+'/sex/'+this.sex)
+				.then(function (rs) {
+					that.rs = rs.data
+					console.log(rs);
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+	  	}
+	  }
+
+	});
+</script>
+</html>
