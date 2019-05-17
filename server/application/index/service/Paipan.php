@@ -1140,7 +1140,7 @@ class Paipan{
 	 * @return array (index=>[天干,地支索引],char=>宫名)
 	 */
 	private function GetGong($year_tg,$month_dz,$hour_dz){
-		$gong_dz = (17  -$month_dz - $hour_dz)%12;
+		$gong_dz = (29  -$month_dz - $hour_dz)%12;
 		$gong_dz<2?$xi=1:$xi=0;//系数,由于从一月开始 子 丑 要算作 12 和 13
 		$gong_tg = (($year_tg%5)*2+$gong_dz+12*$xi)%10;
 		return ['index'=>[$gong_tg,$gong_dz],'char'=>$this->ctg[$gong_tg].$this->cdz[$gong_dz]];
