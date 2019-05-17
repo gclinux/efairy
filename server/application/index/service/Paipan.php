@@ -1082,9 +1082,11 @@ class Paipan{
 		}else{
 			$tmp = $dz;
 		}
+		
 		$he = (13-$tmp)%12;
-		$hua = [2,2,0,1,3,4];
+		$hua = [2,2,0,1,3,4,2];
 		if($dz<$he){
+			//dump($dz);
 			$ju = $hua[$dz];
 		}else{
 			$ju = $hua[$he];

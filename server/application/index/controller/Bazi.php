@@ -18,6 +18,18 @@ class Bazi
         jsonReturn(['pan'=>$info]);
    }
 
+   function api2($sex,$time){
+        $time = strtotime($time);
+        $yy = date('Y',$time);
+        $mm = date('m',$time);
+        $dd = date('d',$time);
+        $hh = date('H',$time);
+        $ii = date('i',$time);
+        $p = new MangPai();
+        $info = $p->GetInfo($sex, $yy, $mm, $dd, $hh, $ii, 0); 
+        jsonReturn($info);
+   }
+
    function test(){
         $p = new Paipan();
         $p->zwz = true; //分早晚子时

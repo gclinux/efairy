@@ -76,9 +76,54 @@ class Mangpai{
         $this->des[]="其中".$this->pan->cwx[$max]."最多,建议改名时候尽量避开{$bianbang[$max]}的边旁的字.";
        // dump($wx_fen);
     }
+
+    /**
+     * 判断兄弟姐妹总数 
+     * @param array $info 排盘结果信息
+     * 
+    */
+    private function getBroSisNum($info){
+        $tg_god = $info['tg_cg_god'];
+        $dz_cg_god = $info['dz_cg_god'];
+        //找出所有比劫和印的数量
+        $yin = $bi = 0;
+        for($i=0;$i<4;$i++){
+            if($tg_god[$i]['index'][0]==0){
+                $bi++;
+            }elseif($tg_god[$i]['index'][0] == 4){
+                $yin++;
+            }
+            foreach($dz_cg_god[$i] as $j=>&$dz_god){
+                if($dz_god['index'][0] == 0){
+                    $bi++;
+                }elseif($dz_god['index'][0] == 4){
+                    $yin++;
+                }
+            }
+        }
+        if($bi>0){
+            $num = $bi;
+        }else{
+            $num = $yin;
+        }
+        //查找6合
+        $dz = $dz_cp = $info['dz'];
+        for($i = 0;$i<4;$i++){
+            $he = $this->pan->getLiuHe($dz[$i]);
+            unset($dz_cp[$i]);
+            if(in_array($he['index'],$dz_cp)){
+                  $num+=2;
+            }
+            if($he['ju'] == $this->pan->GetTgWx($info['tg'][2])){
+                $num++;
+            }
+            
+        }
+        $this->des[]="如果没计划生育,你兄弟姐妹大概为{$num}个";
+    }
  
     /**
-     * 判断兄弟姐妹排行,经过测试 不准
+     * 判断兄弟姐妹排行
      * @param array $tg 天干,排盘中得到的天干信息
      * @param array $dz 地枝,排盘中得到的地支信息
      * @param array $gd 性别,0为男 1 为女
@@ -88,20 +133,16 @@ class Mangpai{
         if(($tg[2] == 2 && $dz[2] == 2) or ($tg[2] == 4 && $dz[2] == 2) or ($tg[2] == 8 && $dz[2] == 8)){
             //日干为 丙寅、戊寅、壬申的家中必定为大
             if($gd == 0){
-                $this->des[] = '你是家中兄弟姐妹的大哥,兄弟姐妹中排行第一;';
+                $this->des[] = '你是家中兄弟姐妹的大哥,兄弟(不含姐妹)中排行第一;';
             }else{
-                $this->des[] = '你是家中兄弟姐妹的大姐,兄弟姐妹中排行第一;';
+                $this->des[] = '你是家中兄弟姐妹的大姐,姐妹(不含兄弟)中排行第一;';
             }
         }elseif(($tg[2] == 2 && $dz[2] == 8) or ($tg[2] == 4 && $dz[2] == 8) or ($tg[2] == 8 && $dz[2] == 2) ){
             //丙申、戊申、壬寅支冲长生,定居长位,如有兄姐必克
             if($gd == 0){
-                $tmp_des = '你是家中兄弟姐妹的大哥,兄弟姐妹中排行第一';
+                $tmp_des = '你是家中兄弟姐妹的大哥,兄弟(不含姐妹)中排行第一,但可能不是第一胎男娃(可能有夭折或者流产)';
             }else{
-                $tmp_des = '你是家中兄弟姐妹的大姐,兄弟姐妹中排行第一';
-            }
-            if(!in_array($dz[3] ,[0,6,3,2,8,5]) ){
-                //这些时辰的会有可能,是第一胎,如果不在里面,表示他前面还有兄姐被克
-                $tmp_des=',但你实际上有个兄姐,只是她/他不属于你们家庭(例如离婚跟了对方,被送养或者被拐了),或者很早就死了,甚至在胎中就流产了';
+                $tmp_des = '你是家中兄弟姐妹的大姐,姐妹(不含兄弟)中排行第一,但可能不是第一胎女娃(可能有夭折或者流产)';
             }
             $this->des[] = $tmp_des;
         }elseif($tg[2] == 0 or $tg[2] == 6){
@@ -128,7 +169,7 @@ class Mangpai{
                 }
             }
             if($has_xingchong == false){
-                $this->des[]='你是家中兄弟姐妹的大姐,兄弟姐妹中排行第一';
+                $this->des[]='你是家中兄弟姐妹的大姐,姐妹(不含兄弟)中排行第一';
             }
         }elseif($tg[2] == 1 or $tg[2] == 7){
             //乙、辛为阴干；午子为阳支。
@@ -136,9 +177,14 @@ class Mangpai{
             //辛金长生在子,顺推一位是辛丑，辛丑为老大，辛卯为次，辛巳为小......
             $cs_dz_index = $this->pan->cs_tg2dz[$tg[2]];//长生所在地支
             $pai =   $dz[2] - $cs_dz_index+1;
-            echo $pai;
+            //echo $pai;
             if(($pai%2==0) and $pai>=0){
-                $this->des[]='你在家中兄弟姐妹中排行第'.($pai/2+1);
+                if($gd==0){
+                    $this->des[]='你在家中兄弟(不含姐妹)中排行第'.($pai/2+1);
+                }else{
+                    $this->des[]='你在家中姐妹(不含兄弟)排行第'.($pai/2+1);
+                }
+                
             }
         }
 
@@ -205,12 +251,11 @@ class Mangpai{
         $info = $this->pan->getInfo($gd, $yy, $mm, $dd, $hh, $mt, $ss);
         $this->wuXingPingHeng($info);
         $this->aboutCunYinYang($info);
-       // $this->getBronNum($info['tg'],$info['dz'],$info['sex']);
+        $this->getBroSisNum($info);
+        $this->getBronNum($info['tg'],$info['dz'],$info['sex']);
         //dump($this->des);
-        return [
-            'pan'=>$info,
-            'des'=>$this->des
-        ];
+        return $this->des;
+
     }
 
     
