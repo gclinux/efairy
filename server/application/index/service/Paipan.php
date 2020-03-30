@@ -1253,7 +1253,7 @@ class Paipan{
 		$ret['sc']= $this->GetCTPart($hh,$mt);
 		$ret['dz_cg'] = [];
 	//	$bazi_str=['年,','月,','日,','时'];
-		$tg_cg_god = $dz_god = $dz_main_god = $selfQi = [];
+		$tg_cg_god = $dz_god = $dz_main_god = $selfQi = $naYin = [];
 		for($i = 0; $i <= 3; $i++){
 			$ret['bazi'][]= [$this->ctg[$tg[$i]],$this->cdz[$dz[$i]]];
 			$tg_cg_god[$i] = $this->GetTenGod($tg[2],$tg[$i]);
@@ -1268,6 +1268,8 @@ class Paipan{
 			$dz_main_god[] = $this->GetTenGod($tg[2],$this->dztg[$dz[$i]]);
 			$dz_god[$i] = $tmp_dz_god;	
 			$selfQi[$i] = $this->getSelfQi($tg[2],$dz[$i]);
+			$naYin[$i] = $this->naYin($tg[$i],$dz[$i]);
+
 		}
 		$cs = $year_cs = $month_cs = $hour_cs = [];
 		for($i = 0; $i <= 3; $i++){
@@ -1277,7 +1279,7 @@ class Paipan{
 			$hour_cs[$i] = $this->GetCs($tg[3],$dz[$i]);
 		}
 		$tg_cg_god[2]=['index'=>[5,5],'char'=>'元'];
-		
+		$ret['na_yin'] = $naYin;
 		$ret['xw'] = $xiong_wang;//凶亡
 		$ret['gong'] = $this->GetGong($tg[0],$dz[1],$dz[3]);//命宫
 		$ret['tg_cg_god'] = $tg_cg_god;
@@ -1340,7 +1342,44 @@ class Paipan{
 	           // $ret['years'] .= "\n";
 	       // }
 	    }
-	    
+	 
 	    return (array)$ret;
+	}
+	/**
+	 * 纳音运算
+	 * @param int $tg 天干数字
+	 * @param int $dz 地枝数字
+	 * @return array ['纳音名',纳音五行属性数字索引];
+	 */
+	public function naYin($tg,$dz){
+		if($tg%2 == 1){
+			$tg = $tg-1;
+			$dz = $dz-1;
+		}
+		$map = [
+			0=>[
+				0=>['海中金',3],2=>['大溪水',4],4=>['佛灯火',1],
+				6=>['沙中金',3],8=>['井泉水',4],10=>['山头火',1]
+			],
+			2=>[
+				0=>['涧下水',4],2=>['炉中火',1],4=>['沙中土',2],
+				6=>['天河水',4],8=>['山下火',1],10=>['房上土',2]
+			],
+			4=>[
+				0=>['霹雳火',1],2=>['城头土',2],4=>['大林木',0],
+				6=>['天上火',1],8=>['大驿土',2],10=>['平地木',0]
+			],
+			6=>[
+				0=>['壁上土',2],2=>['松柏木',0],4=>['白腊金',3],
+				6=>['路边土',2],8=>['石榴木',0],10=>['钗钏金',3]
+			],
+			8=>[
+				0=>['桑松木',0],2=>['金箔金',3],4=>['长流水',4],
+				6=>['杨柳木',0],8=>['剑锋金',3],10=>['大海水',4]
+			]
+		];
+
+		return $map[$tg,$dz];
+
 	}
 }

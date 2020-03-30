@@ -460,10 +460,279 @@ class StarsCheck{
 	 * 金舆
 	 * 甲龙乙蛇丙戊羊，丁己猴歌庚犬方，辛猪壬牛癸逢虎，凡人遇此福气昌,以日干为主，四支见者为是。
 	 */
+	public function jinYu($info,&$star,$key,$value){
+		$find == false;
+		switch($info['tg'][2]){
+			case 0:
+				$find=4;break;
+			case 1:
+				$find=5;break;
+			case 2:
+				$find=7;break;
+			case 3:
+				$find=8;break;
+			case 4:
+				$find=7;break;
+			case 5: 
+				$find=8;break;
+			case 6: 
+				$find=10;break;
+			case 7: 
+				$find = 11;break;
+			case 8: 
+				$find=1;break;
+			case 9: 
+				$find = 2;break;
+		}
 
+		if($find !== false){
+			for($i = 0;$i<4;$i++){
+				if($dz[$i] == $find){
+					$star[$i][$key] = $value;
+				}
+			}
+		}
+	}
 
+	/**
+	 * 福星:凡甲、丙两干见寅或子，乙、癸两干见卯或丑，戊干见申，己干见未，丁干见亥，庚干见午，辛干见巳，壬干见辰是也。年或日
+	 * 
+	 */
+	public function fuXing($info,&$star,$key,$value){
+		$tg = $info['tg'];
+		$dz = $info['dz'];
+		$find =[];
+		if($tg[2] == 0 or $tg[0] == 0 or  $tg[2]==2 or $tg[0]==2){
+			$find = [0,2];
+		}
+		if($tg[2] == 1 or $tg[0] == 1 or  $tg[2]==9 or $tg[0]==9 ){
+			$find[] = 3;$find[] = 1;
+		}
+		if($tg[2] == 4 or $tg[0] == 4  ){
+			$find[] =8;
+		}
+		if($tg[2] == 5 or $tg[0] == 5  ){
+			$find[]=7;
+		}
+		if($tg[2] == 3 or $tg[0] == 3  ){
+			$find[] = 11;
+		}
+		if($tg[2] == 6 or $tg[0] == 6 ){
+			$find=[6];
+		}
+		if($tg[2] == 7 or $tg[0] == 7 ){
+			$find=[5];
+		}
+		if($tg[2] == 8 or $tg[0] == 8 ){
+			$find=[4];
+		}
+		if(count($find)){
+			for($i = 0;$i<4;$i++){
+				if(in_array($dz[$i],$find)){
+					$star[$i][$key] = $value;
+				}
+			}
+		}
+	}
 
+	/**
+	 * 国印:甲见戌， 乙见亥， 丙见丑， 丁见寅，戊见丑， 己见寅， 庚见辰， 辛见巳，壬见未， 癸见申 以年干或日干为主, 地支见者为是
+	 * 
+	 */
+	function guoYin($info,&$star,$key,$value){
+		$tg = $info['tg'];
+		$dz = $info['dz'];
+		$find=[];
+		switch($tg[0]){
+			case 0 :
+				$find[]=10;break;
+			case 1 :
+				$find[]=11;break;
+			case 2 :
+				$find[] = 1;break;
+			case 3 :
+				$find[] = 2;break;
+			case 4 :
+				$find[] = 1;break;
+			case 5 :
+				$find[] = 2;break;
+			case 6 :
+				$find[] = 4;break;
+			case 7 :
+				$find[] = 5;break;
+			case 8 :
+				$find[] = 7;break;
+			case 9 :
+				$find[] = 8;break;
+		}
+		switch($tg[2]){
+			case 0 :
+				$find[]=10;break;
+			case 1 :
+				$find[]=11;break;
+			case 2 :
+				$find[] = 1;break;
+			case 3 :
+				$find[] = 2;break;
+			case 4 :
+				$find[] = 1;break;
+			case 5 :
+				$find[] = 2;break;
+			case 6 :
+				$find[] = 4;break;
+			case 7 :
+				$find[] = 5;break;
+			case 8 :
+				$find[] = 7;break;
+			case 9 :
+				$find[] = 8;break;
+		}
+	
+		for($i = 0;$i<4;$i++){
+			if(in_array($dz[$i],$find)){
+				$star[$i][$key] = $value;
+			}
+		}
 
+	}
+
+	/**
+	 * 天厨,凡甲干见巳，乙干见午，丙干见子，丁干见已，戊干见午，己干见申，庚干见寅，辛干见午，壬干见酉，癸干见亥。
+	 */
+	function tianChu($info,&$star,$key,$value){
+		$tg = $info['tg'];
+		$dz = $info['dz'];
+		$find=[];
+		switch($tg[0]){
+			case 0 :
+				$find[]=5;break;
+			case 1 :
+				$find[]=6;break;
+			case 2 :
+				$find[] = 0;break;
+			case 3 :
+				$find[] = 5;break;
+			case 4 :
+				$find[] = 6;break;
+			case 5 :
+				$find[] = 8;break;
+			case 6 :
+				$find[] = 2;break;
+			case 7 :
+				$find[] = 6;break;
+			case 8 :
+				$find[] = 9;break;
+			case 9 :
+				$find[] = 11;break;
+		}
+		switch($tg[2]){
+			case 0 :
+				$find[]=5;break;
+			case 1 :
+				$find[]=6;break;
+			case 2 :
+				$find[] = 0;break;
+			case 3 :
+				$find[] = 5;break;
+			case 4 :
+				$find[] = 6;break;
+			case 5 :
+				$find[] = 8;break;
+			case 6 :
+				$find[] = 2;break;
+			case 7 :
+				$find[] = 6;break;
+			case 8 :
+				$find[] = 9;break;
+			case 9 :
+				$find[] = 11;break;
+		}
+		for($i = 0;$i<4;$i++){
+			if(in_array($dz[$i],$find)){
+				$star[$i][$key] = $value;
+			}
+		}
+
+	}
+
+	/**
+	 * 学堂
+	 *年纳音为木，月日时支见亥，；
+	 年纳音为火，月日时支见寅；
+	 年纳音为土，月日时支见申；
+	 年纳音为金，月日时支见巳；
+	 年纳音为水，月日时支见申
+	 */
+	function xueTang($info,&$star,$key,$value){
+		$tg = $info['tg'];
+		$dz = $info['dz'];
+		$naYin = $info['na_yin'][0];
+		switch($naYin[1]){
+			case 0: 
+				$find = 11;break;
+			case 1:
+				$find = 2;break;
+			case 2:
+				$find = 8;break;
+			case 3:
+				$find = 5;break;
+			case 4:
+				$find = 8;break;
+		}
+		for($i = 0;$i<4;$i++){
+			if($i == 0 ){
+				continue;
+			}
+			if($dz[$i]==$find){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+
+	/**
+	*    ['hongYang(','红艳'],
+	日天干是甲，地支见午；
+	日天干是乙，地支见申；
+	日天干是丙，地支见寅；
+	日天干是丁，地支见未；
+	日天干是戊，地支见辰；
+	日天干是己，地支见辰；
+	日天干是庚，地支见戌；
+	日天干是辛，地支见酉；
+	日天干是壬，地支见子；
+	日天干是癸，地支见申。
+	*/
+	function hongYang($info,&$star,$key,$value){
+		switch ($info['tg'][2]) {
+			case 0:
+				$find = 6;break;
+			case 1:
+				$find = 8;break;
+			case 2:
+				$find = 2;break;
+			case 3:
+				$find = 7;break;
+			case 4:
+				$find = 4;break;
+			case 5:
+				$find = 4;break;
+			case 6:
+				$find = 10;break;
+			case 7:
+				$find = 9;break;
+			case 8:
+				$find = 0;break;
+			case 9:
+				$find = 8;break;
+		}
+		for($i = 0;$i<4;$i++){
+			if($dz[$i]==$find){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+
+	
 
 }
 
