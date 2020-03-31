@@ -691,18 +691,19 @@ class StarsCheck{
 
 	/**
 	*    ['hongYang(','红艳'],
-	日天干是甲，地支见午；
-	日天干是乙，地支见申；
-	日天干是丙，地支见寅；
-	日天干是丁，地支见未；
-	日天干是戊，地支见辰；
-	日天干是己，地支见辰；
-	日天干是庚，地支见戌；
-	日天干是辛，地支见酉；
-	日天干是壬，地支见子；
-	日天干是癸，地支见申。
+	*日天干是甲，地支见午；
+	*日天干是乙，地支见申；
+	*日天干是丙，地支见寅；
+	*日天干是丁，地支见未；
+	*日天干是戊，地支见辰；
+	*日天干是己，地支见辰；
+	*日天干是庚，地支见戌；
+	*日天干是辛，地支见酉；
+	*日天干是壬，地支见子；
+	*日天干是癸，地支见申。
 	*/
 	function hongYang($info,&$star,$key,$value){
+		$dz = $info['dz'];
 		switch ($info['tg'][2]) {
 			case 0:
 				$find = 6;break;
@@ -732,12 +733,357 @@ class StarsCheck{
 		}
 	}
 
-	
+	/**
+	 * 流霞
+	 * 甲日酉、乙日戌、丙日未、丁日申、戊日巳；己日午、庚日辰、辛日卯、壬日亥、癸日寅
+	 */
+	public function liuXia($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		switch ($info['tg'][2]) {
+			case 0:
+				$find = 9;break;
+			case 1:
+				$find = 10;break;
+			case 2:
+				$find = 7;break;
+			case 3:
+				$find = 8;break;
+			case 4:
+				$find = 5;break;
+			case 5:
+				$find = 6;break;
+			case 6:
+				$find = 4;break;
+			case 7:
+				$find = 3;break;
+			case 8:
+				$find = 11;break;
+			case 9:
+				$find = 2;break;
+		}
+		for($i = 0;$i<4;$i++){
+			if($dz[$i]==$find){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+
+	/**将星,三合局里的中间
+	 * 寅午戌见午，申子辰见子，巳酉丑见酉，亥卯未见卯,只有3,6,9
+	 */
+	public function jiangXing($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$day = $info['dz'][2];
+		$year = $info['dz'][0];
+		$map = [
+			0,9,6,3,0,9,6,3,0,9,6,3
+		];
+		for($i = 0;$i<4;$i++){
+			if($i !== 2 ){
+				if($dz[$i] == $map[$day]){
+					$star[$i][$key] = $value;
+				}
+			}
+			if($i !== 0){
+				if($dz[$i] == $map[$year]){
+					$star[$i][$key] = $value;
+				}
+			}
+			
+		}
+
+	}
+
+	/**
+	 * 华盖 三合局里最后一个
+	 * 寅午戌 申子辰 巳酉丑 亥卯未
+	 */
+	public function huaGai($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$day = $info['dz'][2];
+		$year = $info['dz'][0];
+		$map = [
+			4,1,10,7,4,1,10,7,4,1,10,7
+		];
+		for($i = 0;$i<4;$i++){
+			if($i !== 2 ){
+				if($dz[$i] == $map[$day]){
+					$star[$i][$key] = $value;
+				}
+			}
+			if($i !== 0){
+				if($dz[$i] == $map[$year]){
+					$star[$i][$key] = $value;
+				}
+			}
+			
+		}
+	}
+
+	/**
+	 * 驿马 申子辰马在寅，寅午戌马在申，巳酉丑马在亥，亥卯未马在巳。
+	 */
+	public function yiMa($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$day = $info['dz'][2];
+		$year = $info['dz'][0];
+		$map = [
+			2,11,8,5,2,11,8,5,2,11,8,5
+		];
+		for($i = 0;$i<4;$i++){
+			if($i !== 2 ){
+				if($dz[$i] == $map[$day]){
+					$star[$i][$key] = $value;
+				}
+			}
+			if($i !== 0){
+				if($dz[$i] == $map[$year]){
+					$star[$i][$key] = $value;
+				}
+			}
+			
+		}
+	}
+	/**
+	 * 劫 jieSha,克三合局的属性
+	 * 以年支或日支为主，其他地支见者为是。申子辰见巳，亥卯未见申，寅午戌见亥，巳酉丑见寅。
+	 */
+	public function jieSha($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$day = $info['dz'][2];
+		$year = $info['dz'][0];
+		$map = [
+			5,2,11,8,5,2,10,8,5,2,11,8
+		];
+		for($i = 0;$i<4;$i++){
+			if($i !== 2 ){
+				if($dz[$i] == $map[$day]){
+					$star[$i][$key] = $value;
+				}
+			}
+			if($i !== 0){
+				if($dz[$i] == $map[$year]){
+					$star[$i][$key] = $value;
+				}
+			}
+			
+		}
+	}
+	/**
+	 * 亡神
+	 * 申子辰以11，寅午戌以5，巳酉丑以8，亥卯未以2
+	 * 
+	 */
+	function wangShen($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$day = $info['dz'][2];
+		$year = $info['dz'][0];
+		$map = [
+			11,8,5,2,11,8,5,2,11,8,5,2
+		];
+		for($i = 0;$i<4;$i++){
+			if($i !== 2 ){
+				if($dz[$i] == $map[$day]){
+					$star[$i][$key] = $value;
+				}
+			}
+			if($i !== 0){
+				if($dz[$i] == $map[$year]){
+					$star[$i][$key] = $value;
+				}
+			}
+			
+		}
+	}
+
+	/**
+     *  ['yuanChen','元辰(大耗)'],
+	 * 地支六冲前后,根据性别和年的阴阳决定是前还是后
+	 * 
+	 */
+	public function yuanChen($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$chong = $dz[0]+6;
+		$shunxu = $dz[0]+$info['sex']%2;
+		if($shunxu == 0){
+			$target = $chong-1;
+		}else{
+			$target = $chong+1;
+		}
+		for($i = 0;$i<4;$i++){
+			if($i !== 0){
+				if($dz[$i] == $target){
+					$star[$i][$key] = $value;
+				}
+			}
+		}
+	}
+	/**
+     * ['guChen','孤辰'],,
+	 * 子年寅、丑年寅、寅年巳、卯年巳、辰年巳、巳年申、午年申、未年申、申年亥、酉年亥、戌年亥、亥年寅
+	 * 
+	 */
+	public function guChen($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$map = [
+			2,2,5,5,5,8,8,8,11,11,11,2
+		];
+		$target = $map[$dz[0]];
+		for($i=0; $i<4; $i++){
+			if($i==0){
+				continue;
+			}
+			if($dz[$i] == $target){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+
+	/**
+	 * 寡宿
+	 * 子年、丑年、亥年 见戌10 命带寡宿 年支为寅卯辰见丑1为寡。巳午未的见辰4为寡。申酉戌的在它支见未7为命带寡宿。
+	 */
+	public function guaSu($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$map = [
+			10,10,1,1,1,4,4,4,7,7,7,10
+		];
+		$target = $map[$dz[0]];
+		for($i=0; $i<4; $i++){
+			if($i==0){
+				continue;
+			}
+			if($dz[$i] == $target){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+
+	/**
+	 * 灾煞,将星相冲
+	 * 申子辰见午6, 亥卯未见酉9, 寅午戌见子0, 巳酉丑见卯3,以年支为主, 四柱地支中见之者为是
+	 */
+	public function zhaiSha($info,&$star,$key,$value){
+		$year = $info['dz'][0];
+		$map = [6,3,0,9,6,3,0,9,6,3,0,9];
+		for($i=0;$i<4;$i++){
+			if($i = 0){
+				continue;
+			}
+			if($dz[$i] == $map[$year]){
+				$star[$i][$key] = $value;
+			}
+		}
+
+	}
+
+	/**
+	 * ['liuE','六厄'],六厄为地支三合局之死地
+	 * 申子辰水局死地在卯3,寅午戌三合火局，死地在酉9；亥卯未三合木局，死地在午6；巳酉丑三合金局死地在子0
+	 */
+	function liuE($info,&$start,$key,$value){
+		$year = $info['dz'][0];
+		$map = [3,0,9,6,3,0,9,6,3,0,9,6];
+		for($i=0;$i<4;$i++){
+			if($i = 0){
+				continue;
+			}
+			if($dz[$i] == $map[$year]){
+				$star[$i][$key] = $value;
+			}
+		}
+
+	}
+
+	/**
+	 *  ['gouSha','勾煞'],勾煞和绞煞气一起
+	 * 阳男阴女，命前三辰为勾，命后三辰为绞。
+	 */
+
+	function gouSha($info,&$start,$key,$value){
+		$dz = $info['dz'];
+		$hit = ($info['sex'] + $dz[0])%2;
+		if($hit == 0){
+			$target = ($dz[0]+12-3)%12;
+			for($i=0;$i<4;$i++){
+				if($i = 0){
+					continue;
+				}
+				if($dz[$i] == $target){
+					$star[$i][$key] = $value;
+				}
+			}
+		}
+	}
+	/**
+	 *  ['jiaoSha','绞煞'],勾煞和绞煞气一起
+	 * 阳男阴女，命前三辰为勾，命后三辰为绞。
+	 */
+
+	function jiaoSha($info,&$start,$key,$value){
+		$dz = $info['dz'];
+		$hit = ($info['sex'] + $dz[0])%2;
+		if($hit == 0){
+			$target = ($dz[0]+3)%12;
+			for($i=0;$i<4;$i++){
+				if($i = 0){
+					continue;
+				}
+				if($dz[$i] == $target){
+					$star[$i][$key] = $value;
+				}
+			}
+		}
+	}
+
+	/**
+	 * 童子
+	 * .命造生在春季或秋季的（以月令算），日支或时支见寅或子的；
+	 * .命造生在冬季或夏季的（以月令算），日支或时支见卯未或辰的；
+	 * .年柱纳音为金或木的，日支或时支见午或卯的。
+	 * .年柱纳音为水或火的，日支或时支见酉或戌的。
+	 * .年柱纳音为土命的，日支或时支见辰或巳的。
+	 */
+	function tongZi($info,&$start,$key,$value){
+		$dz = $info['dz'];
+		$naYin = $info['na_yin'][0][1];
+		$target = [];
+		if($dz[1] >1 and $dz[1]<=4 ){//春天
+			$target =[0,2];
+		}elseif($dz[1] >4 and $dz[1]<=7 ){
+			$target = [3,7,4];
+		}
+		switch($naYin){
+			case 0 : //木
+			case 3 :
+				$target[]=6;
+				$target[]=3;
+			break;
+			case 1 :
+			case 4 :
+				$target[]=9;
+				$target[]=10;
+			break;
+			case 3:
+				$target[]=4;
+				$target[]=5;
+			break;
+		}
+		for($i=0;$i<4;$i++){
+			if($i = 0 || $i=1){
+				continue;
+			}
+			if(in_array($dz[$i],$target)){
+				$star[$i][$key] = $value;
+			}
+		}
+
+	}
 
 }
 
 class Stars{
-    /**贵人的序号及名字
+    /**星煞的序号及名字
      * @var $star_name array
      */
     public $star_name = [
@@ -773,7 +1119,6 @@ class Stars{
         ['yuanChen','元辰(大耗)'],
         ['guChen','孤辰'],
         ['guaSu','寡宿'],
-        ['diSha','的煞'],
         ['zhaiSha','灾煞'],
         ['liuE','六厄'],
         ['gouSha','勾煞'],
@@ -788,8 +1133,6 @@ class Stars{
         ['shibai','十恶大败'],
     ];
 
-
-
     /*
 	public $ctg = array('甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'); //char of TianGan
 	 * 五行
@@ -802,8 +1145,6 @@ class Stars{
     function getStars($info){
     	$star = [[],[],[],[]];//年,月,日,时
     	
-    	
-
     }
 
 }

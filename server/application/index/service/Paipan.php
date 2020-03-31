@@ -1379,7 +1379,7 @@ class Paipan{
 			]
 		];
 
-		return $map[$tg,$dz];
+		return $map[$tg][$dz];
 
 	}
 }
