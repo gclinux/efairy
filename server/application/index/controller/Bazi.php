@@ -1,6 +1,7 @@
 <?php
 namespace app\index\controller;
 use app\index\service\Paipan;
+use app\index\service\Stars;
 use app\index\service\MangPai;
 class Bazi
 {
@@ -13,7 +14,7 @@ class Bazi
         $dd = date('d',$time);
         $hh = date('H',$time);
         $ii = date('i',$time);
-        $p = new Paipan();
+        $p = new Stars();
         $info = $p->GetInfo($sex, $yy, $mm, $dd, $hh, $ii, 0); 
         jsonReturn(['pan'=>$info]);
    }

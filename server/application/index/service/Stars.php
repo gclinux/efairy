@@ -1,5 +1,6 @@
 <?php
 namespace app\index\service;
+use app\index\service\Paipan;
 class StarsCheck{
 	/**	
 	 * 空亡,在Paipan类里已经实现了
@@ -263,6 +264,7 @@ class StarsCheck{
 
 	public function tianXie($info,&$star,$key,$value){
 		$dz=$info['dz'];
+		$tg = $info['tg'];
 		$m = $info['dz'];
 		if(\in_array($dz[1],[2,3,4])){///寅卯辰月
 			if($tg[2] == 4 and $dz[2] == 2){
@@ -315,9 +317,12 @@ class StarsCheck{
 				$xiu =  array_merge(array_keys($tg,0,false) , array_keys($tg,1,false));
 			}
 		}
-		foreach($xiu as $i){
-			$star[$i][$key] = $value;
+		if(isset($xiu)){
+			foreach($xiu as $i){
+				$star[$i][$key] = $value;
+			}
 		}
+
 	}
 
 	/**
@@ -461,7 +466,8 @@ class StarsCheck{
 	 * 甲龙乙蛇丙戊羊，丁己猴歌庚犬方，辛猪壬牛癸逢虎，凡人遇此福气昌,以日干为主，四支见者为是。
 	 */
 	public function jinYu($info,&$star,$key,$value){
-		$find == false;
+		$dz = $info['dz'];
+		$find = false;
 		switch($info['tg'][2]){
 			case 0:
 				$find=4;break;
@@ -658,10 +664,10 @@ class StarsCheck{
 	/**
 	 * 学堂
 	 *年纳音为木，月日时支见亥，；
-	 年纳音为火，月日时支见寅；
-	 年纳音为土，月日时支见申；
-	 年纳音为金，月日时支见巳；
-	 年纳音为水，月日时支见申
+	 *年纳音为火，月日时支见寅；
+	 *年纳音为土，月日时支见申；
+	 *年纳音为金，月日时支见巳；
+	 *年纳音为水，月日时支见申
 	 */
 	function xueTang($info,&$star,$key,$value){
 		$tg = $info['tg'];
@@ -964,10 +970,11 @@ class StarsCheck{
 	 * 申子辰见午6, 亥卯未见酉9, 寅午戌见子0, 巳酉丑见卯3,以年支为主, 四柱地支中见之者为是
 	 */
 	public function zhaiSha($info,&$star,$key,$value){
+		$dz = $info['dz'];
 		$year = $info['dz'][0];
 		$map = [6,3,0,9,6,3,0,9,6,3,0,9];
 		for($i=0;$i<4;$i++){
-			if($i = 0){
+			if($i == 0){
 				continue;
 			}
 			if($dz[$i] == $map[$year]){
@@ -981,11 +988,12 @@ class StarsCheck{
 	 * ['liuE','六厄'],六厄为地支三合局之死地
 	 * 申子辰水局死地在卯3,寅午戌三合火局，死地在酉9；亥卯未三合木局，死地在午6；巳酉丑三合金局死地在子0
 	 */
-	function liuE($info,&$start,$key,$value){
+	function liuE($info,&$star,$key,$value){
+		$dz = $info['dz'];
 		$year = $info['dz'][0];
 		$map = [3,0,9,6,3,0,9,6,3,0,9,6];
 		for($i=0;$i<4;$i++){
-			if($i = 0){
+			if($i == 0){
 				continue;
 			}
 			if($dz[$i] == $map[$year]){
@@ -1000,13 +1008,13 @@ class StarsCheck{
 	 * 阳男阴女，命前三辰为勾，命后三辰为绞。
 	 */
 
-	function gouSha($info,&$start,$key,$value){
+	function gouSha($info,&$star,$key,$value){
 		$dz = $info['dz'];
 		$hit = ($info['sex'] + $dz[0])%2;
 		if($hit == 0){
 			$target = ($dz[0]+12-3)%12;
 			for($i=0;$i<4;$i++){
-				if($i = 0){
+				if($i == 0){
 					continue;
 				}
 				if($dz[$i] == $target){
@@ -1020,13 +1028,13 @@ class StarsCheck{
 	 * 阳男阴女，命前三辰为勾，命后三辰为绞。
 	 */
 
-	function jiaoSha($info,&$start,$key,$value){
+	function jiaoSha($info,&$star,$key,$value){
 		$dz = $info['dz'];
 		$hit = ($info['sex'] + $dz[0])%2;
 		if($hit == 0){
 			$target = ($dz[0]+3)%12;
 			for($i=0;$i<4;$i++){
-				if($i = 0){
+				if($i == 0){
 					continue;
 				}
 				if($dz[$i] == $target){
@@ -1044,7 +1052,7 @@ class StarsCheck{
 	 * .年柱纳音为水或火的，日支或时支见酉或戌的。
 	 * .年柱纳音为土命的，日支或时支见辰或巳的。
 	 */
-	function tongZi($info,&$start,$key,$value){
+	function tongZi($info,&$star,$key,$value){
 		$dz = $info['dz'];
 		$naYin = $info['na_yin'][0][1];
 		$target = [];
@@ -1080,12 +1088,149 @@ class StarsCheck{
 
 	}
 
+	/**
+	 * 词馆,词馆者，如今官于翰林，谓之词馆，取其学业精专，文章出类。适合做作家,教授,学者
+	 * 木命见寅，庚寅为正，火命见巳，乙巳为正，土命见巳，丁巳为正,金命见申，壬申为正，水命见亥，癸亥为正。
+	 * 
+	 */
+	function ciGuan($info,&$star,$key,$value){
+		$tg = $info['tg'];
+		$dz = $info['dz'];
+		$naYin = $info['na_yin'][0];
+		switch($naYin[1]){
+			case 0: 
+				$find = 2;break;
+			case 1:
+				$find = 5;break;
+			case 2:
+				$find = 5;break;
+			case 3:
+				$find = 8;break;
+			case 4:
+				$find = 11;break;
+		}
+		for($i = 0;$i<4;$i++){
+			if($i == 0 ){
+				continue;
+			}
+			if($dz[$i]==$find){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+
+	/**
+	 * 红鸾 红鸾是神话传说中的红色仙鸟，命家所说的吉星，主婚配等喜事，
+	 */
+	public function hongLian($info,&$star,$key,$value){
+		//$map = [3, 2,1,0,11,10,9,8,7,6,5,4];
+		$dz = $info['dz'];
+		$find = (15-$dz[0])%12;
+		for($i = 0;$i<4;$i++){
+			if($i == 0 ){
+				continue;
+			}
+			if($dz[$i]==$find){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+
+	/**
+	 * 天喜
+	 */
+	public function tianXi($info,&$star,$key,$value){
+		//$map = [9,8,7,6,5,4,3,2,1,0,11,10];
+		$dz = $info['dz'];
+		$find = (21-$dz[0])%12;
+		for($i = 0;$i<4;$i++){
+			if($i == 0 ){
+				continue;
+			}
+			if($dz[$i]==$find){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+	/**
+	 * 桃花,即子午卯酉 这4个正向(北,南,东,西)
+	 * 亥卯未见子0、巳酉丑见午6、寅午戌见卯3、申子辰见酉9
+	 */
+	public function taoHua($info,&$star,$key,$value){
+		$dz = $info['dz'];
+		$day = $info['dz'][2];
+		$year = $info['dz'][0];
+		$map = [
+			9,6,3,0,9,6,3,0,9,6,3,0
+		];
+		for($i = 0;$i<4;$i++){
+			if($i !== 2 ){
+				if($dz[$i] == $map[$day]){
+					$star[$i][$key] = $value;
+				}
+			}
+			if($i !== 0){
+				if($dz[$i] == $map[$year]){
+					$star[$i][$key] = $value;
+				}
+			}
+			
+		}
+	}
+	/**
+	 * 干禄
+	 * 甲禄在寅，乙禄在卯，丙戊禄在巳，丁己禄在午，庚禄在申，辛禄在酉，壬祿在亥，癸禄在子。
+	 */
+	public function ganLu($info,&$star,$key,$value){
+		$day = $info['tg'][2];
+		$map = [2,3,5,6,8,9,11,0];
+		$dz = $info['dz'];
+		$find = $map[$day];
+		for($i = 0;$i<4;$i++){
+			if($dz[$i] == $find){
+				$star[$i][$key] = $value;
+			}
+		}
+	}
+
+	/**
+	 * 十灵
+	 * 甲申、乙酉、丙子、丁丑、戊午、己丑、庚寅、辛卯、壬午、癸未日
+	 */
+	public function shiLing($info,&$star,$key,$value){
+		$map = [
+			'0-8','1-9','2-0','3-1','4-6','5-1','6-2','7-3','8-6','9-7'
+		];
+		$find = $info['tg'][2].'-'.$info['dz'][2];
+		if(in_array($find,$map)){
+			$star[2][$key] = $value;
+		}
+	}
+
+	/**
+	 * 十恶大败 主人花钱如流水，一生钱财难聚
+	 * 甲辰 乙巳 丙申 丁亥 戊戌 己丑 庚辰 辛巳 壬申 癸亥
+	 */
+	public function shiE($info,&$star,$key,$value){
+		$map = [
+			'0-8','1-9','2-0','3-1','4-6','5-1','6-2','7-3','8-6','9-7'
+		];
+		$find = $info['tg'][2].'-'.$info['dz'][2];
+		if(in_array($find,$map)){
+			$star[2][$key] = $value;
+		}
+	}
+
+	
+
+
 }
 
 class Stars{
     /**星煞的序号及名字
      * @var $star_name array
      */
+
     public $star_name = [
 		['kongWang','空亡'],
     	['tianYi','天乙'],
@@ -1098,7 +1243,7 @@ class Stars{
         ['guLuan','孤鸾'],
         ['sanQi','三奇'],
         ['tianXie','天赦'],
-        ['xiuDe','德秀'],
+        ['deXiu','德秀'],
         ['kuiGang','魁罡'],
         ['jingShen','金神'],
         ['tianLuo','天罗'],
@@ -1130,21 +1275,42 @@ class Stars{
         ['taoHua','桃花'],
         ['ganLu','干禄'],
         ['shiLing','十灵'],//甲申、乙酉、丙子、丁丑、戊午、己丑、庚寅、辛卯、壬午、癸未日
-        ['shibai','十恶大败'],
+		['shiE','十恶大败'],
     ];
 
-    /*
-	public $ctg = array('甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'); //char of TianGan
-	 * 五行
-	public $cwx = array( '木', '火', '土','金','水'); //char of WuXing
-	 * 十二地支
-	 * @var array
-	public $cdz = array('子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥');
-    */
+	/**
+	 * 
+	 */
 
-    function getStars($info){
+    private function getStars($info){
+		$starChecker = new StarsCheck();
     	$star = [[],[],[],[]];//年,月,日,时
-    	
-    }
+    	foreach($this->star_name as $key=>$value){
+			call_user_func_array( [$starChecker,$value[0]] , [$info,&$star,$key,$value] );
+		}
+		$info['star'] = $star;
+		return $info;
+	}
+	
+
+	/**
+	 * 公历年排盘
+	 * @param int $gd 0男1女
+	 * @param int $yy
+	 * @param int $mm
+	 * @param int $dd
+	 * @param int $hh 时间(0-23)
+	 * @param int $mt 分钟数(0-59),在跨节的时辰上会需要,有的排盘忽略了跨节
+	 * @param int $ss 秒数(0-59)
+	 * @return array
+	 */
+	public function getInfo($gd, $yy, $mm, $dd, $hh, $mt=0, $ss=0){
+
+		$paiPan = new Paipan;
+		$info = $paiPan->getInfo($gd, $yy, $mm, $dd, $hh, $mt, $ss);
+		return $this->getStars($info);
+		
+	}
+	
 
 }
