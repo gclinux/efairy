@@ -264,7 +264,6 @@ class StarsCheck{
 
 	public function tianXie($info,&$star,$key,$value){
 		$dz=$info['dz'];
-		$tg = $info['tg'];
 		$m = $info['dz'];
 		if(\in_array($dz[1],[2,3,4])){///寅卯辰月
 			if($tg[2] == 4 and $dz[2] == 2){
@@ -317,12 +316,9 @@ class StarsCheck{
 				$xiu =  array_merge(array_keys($tg,0,false) , array_keys($tg,1,false));
 			}
 		}
-		if(isset($xiu)){
-			foreach($xiu as $i){
-				$star[$i][$key] = $value;
-			}
+		foreach($xiu as $i){
+			$star[$i][$key] = $value;
 		}
-
 	}
 
 	/**
@@ -466,8 +462,7 @@ class StarsCheck{
 	 * 甲龙乙蛇丙戊羊，丁己猴歌庚犬方，辛猪壬牛癸逢虎，凡人遇此福气昌,以日干为主，四支见者为是。
 	 */
 	public function jinYu($info,&$star,$key,$value){
-		$dz = $info['dz'];
-		$find = false;
+		$find == false;
 		switch($info['tg'][2]){
 			case 0:
 				$find=4;break;
@@ -970,11 +965,10 @@ class StarsCheck{
 	 * 申子辰见午6, 亥卯未见酉9, 寅午戌见子0, 巳酉丑见卯3,以年支为主, 四柱地支中见之者为是
 	 */
 	public function zhaiSha($info,&$star,$key,$value){
-		$dz = $info['dz'];
 		$year = $info['dz'][0];
 		$map = [6,3,0,9,6,3,0,9,6,3,0,9];
 		for($i=0;$i<4;$i++){
-			if($i == 0){
+			if($i = 0){
 				continue;
 			}
 			if($dz[$i] == $map[$year]){
@@ -989,11 +983,10 @@ class StarsCheck{
 	 * 申子辰水局死地在卯3,寅午戌三合火局，死地在酉9；亥卯未三合木局，死地在午6；巳酉丑三合金局死地在子0
 	 */
 	function liuE($info,&$star,$key,$value){
-		$dz = $info['dz'];
 		$year = $info['dz'][0];
 		$map = [3,0,9,6,3,0,9,6,3,0,9,6];
 		for($i=0;$i<4;$i++){
-			if($i == 0){
+			if($i = 0){
 				continue;
 			}
 			if($dz[$i] == $map[$year]){
@@ -1014,7 +1007,7 @@ class StarsCheck{
 		if($hit == 0){
 			$target = ($dz[0]+12-3)%12;
 			for($i=0;$i<4;$i++){
-				if($i == 0){
+				if($i = 0){
 					continue;
 				}
 				if($dz[$i] == $target){
@@ -1034,7 +1027,7 @@ class StarsCheck{
 		if($hit == 0){
 			$target = ($dz[0]+3)%12;
 			for($i=0;$i<4;$i++){
-				if($i == 0){
+				if($i = 0){
 					continue;
 				}
 				if($dz[$i] == $target){
@@ -1093,7 +1086,7 @@ class StarsCheck{
 	 * 木命见寅，庚寅为正，火命见巳，乙巳为正，土命见巳，丁巳为正,金命见申，壬申为正，水命见亥，癸亥为正。
 	 * 
 	 */
-	function ciGuan($info,&$star,$key,$value){
+	function ciGuang($info,&$star,$key,$value){
 		$tg = $info['tg'];
 		$dz = $info['dz'];
 		$naYin = $info['na_yin'][0];
@@ -1184,7 +1177,6 @@ class StarsCheck{
 	public function ganLu($info,&$star,$key,$value){
 		$day = $info['tg'][2];
 		$map = [2,3,5,6,8,9,11,0];
-		$dz = $info['dz'];
 		$find = $map[$day];
 		for($i = 0;$i<4;$i++){
 			if($dz[$i] == $find){
@@ -1211,7 +1203,7 @@ class StarsCheck{
 	 * 十恶大败 主人花钱如流水，一生钱财难聚
 	 * 甲辰 乙巳 丙申 丁亥 戊戌 己丑 庚辰 辛巳 壬申 癸亥
 	 */
-	public function shiE($info,&$star,$key,$value){
+	public function shiE(){
 		$map = [
 			'0-8','1-9','2-0','3-1','4-6','5-1','6-2','7-3','8-6','9-7'
 		];
@@ -1243,7 +1235,7 @@ class Stars{
         ['guLuan','孤鸾'],
         ['sanQi','三奇'],
         ['tianXie','天赦'],
-        ['deXiu','德秀'],
+        ['xiuDe','德秀'],
         ['kuiGang','魁罡'],
         ['jingShen','金神'],
         ['tianLuo','天罗'],
@@ -1283,10 +1275,10 @@ class Stars{
 	 */
 
     private function getStars($info){
-		$starChecker = new StarsCheck();
+		$starChecker = new StarsCheck()
     	$star = [[],[],[],[]];//年,月,日,时
     	foreach($this->star_name as $key=>$value){
-			call_user_func_array( [$starChecker,$value[0]] , [$info,&$star,$key,$value] );
+			call_user_func_array( [$starChecker,$star[0]] , [$info,$start,$key,$value] );
 		}
 		$info['star'] = $star;
 		return $info;
@@ -1308,8 +1300,7 @@ class Stars{
 
 		$paiPan = new Paipan;
 		$info = $paiPan->getInfo($gd, $yy, $mm, $dd, $hh, $mt, $ss);
-		return $this->getStars($info);
-		
+		c/4
 	}
 	
 
